@@ -25,6 +25,10 @@ namespace Dictionaries
             //C)
             Dictionary<Person, int> anothervalue = new Dictionary<Person, int>();
             anothervalue.Add(new Person {Name = "Person1", Age = 22 }, 1);
+
+            //D
+            Dictionary<double, string> dictionary = new Dictionary<double, string>();
+            dictionary.Add(2.2, "Dav");
         }
     }
 
