@@ -5,3 +5,4 @@ Tasks solved:
 Directories
 Overloading
 Delegation
+Lambda Expressions

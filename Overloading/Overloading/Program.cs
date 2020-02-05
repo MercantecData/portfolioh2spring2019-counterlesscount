@@ -5,6 +5,7 @@ namespace Overloading
 {
     class Program
     {
+
         public delegate void delV();
         public delegate float delF();
         public delegate void delP(int a, int b, int c);
@@ -17,6 +18,7 @@ namespace Overloading
         public delegate int delIntS(int a);
         public delegate float delFloatS(float a);
         public delegate int delStringS(string a);
+        public delegate double delDouble(double a);
 
 
 
@@ -24,45 +26,50 @@ namespace Overloading
         {
             
             //A)
-            delV dV = new delV(Math.DelegateVoid);
+            delV dV = new delV(MathFunc.DelegateVoid);
             dV.Invoke();
             //B)
-            delF dF = new delF(Math.DelegateFloat);
+            delF dF = new delF(MathFunc.DelegateFloat);
             dF.Invoke();
             //C)
-            delP dP = new delP(Math.DelegateParam);
+            delP dP = new delP(MathFunc.DelegateParam);
             dP.Invoke(1, 2, 3);
 
 
             //Math
             //Int
-            delInt dIntAdd = new delInt(Math.DelegateAdd);
-            delInt dIntSub = new delInt(Math.DelegateSub);
-            delInt dIntMulti = new delInt(Math.DelegateMulti);
-            delInt dIntDiv = new delInt(Math.DelegateDiv);
-            delInt dIntSec = new delInt(Math.DelegateSecond);
-            delIntS dIntSecS = new delIntS(Math.DelegateSecond);
+            delInt dIntAdd = MathFunc.DelegateAdd;
+            delInt dIntSub = MathFunc.DelegateSub;
+            delInt dIntMulti = MathFunc.DelegateMulti;
+            delInt dIntDiv = MathFunc.DelegateDiv;
+            delInt dIntSec = MathFunc.DelegateSecond;
+            delIntS dIntSecS = MathFunc.DelegateSecond;
             //Float
-            delFloat dFloatAdd = new delFloat(Math.DelegateAdd);
-            delFloat dFloatSub = new delFloat(Math.DelegateSub);
-            delFloat dFloatMulti = new delFloat(Math.DelegateMulti);
-            delFloat dFloatDiv = new delFloat(Math.DelegateDiv);
-            delFloat dFloatSec = new delFloat(Math.DelegateSecond);
-            delFloatS dFloatSecS = new delFloatS(Math.DelegateSecond);
+            delFloat dFloatAdd = MathFunc.DelegateAdd;
+            delFloat dFloatSub = MathFunc.DelegateSub;
+            delFloat dFloatMulti = MathFunc.DelegateMulti;
+            delFloat dFloatDiv = MathFunc.DelegateDiv;
+            delFloat dFloatSec = MathFunc.DelegateSecond;
+            delFloatS dFloatSecS = MathFunc.DelegateSecond;
             //String
-            delString dStringAdd = new delString(Math.DelegateAdd);
-            delString dStringSub = new delString(Math.DelegateSub);
-            delString dStringMulti = new delString(Math.DelegateMulti);
-            delString dStringDiv = new delString(Math.DelegateDiv);
-            delString dStringSec = new delString(Math.DelegateSecond);
-            delStringS dStringSecS = new delStringS(Math.DelegateSecond);
+            delString dStringAdd = MathFunc.DelegateAdd;
+            delString dStringSub = MathFunc.DelegateSub;
+            delString dStringMulti = MathFunc.DelegateMulti;
+            delString dStringDiv = MathFunc.DelegateDiv;
+            delString dStringSec = MathFunc.DelegateSecond;
+            delStringS dStringSecS = MathFunc.DelegateSecond;
 
 
             //A little program
+            Error ERROR = new Error();
+
             Console.WriteLine("A little program...");
             Console.WriteLine("");
 
             Console.WriteLine("Type your calculation, and then press Enter for result");
+            Console.WriteLine("c clears the screen:");
+            Console.WriteLine("h For a list of commands:");
+            Console.WriteLine("");
             bool on = true;
             while (on)
             {
@@ -77,8 +84,8 @@ namespace Overloading
                     string second = y[1];
                     try
                     {
-                        
-                        
+
+
                         int answer = dIntAdd.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
                         Console.WriteLine(answer);
                     }
@@ -185,49 +192,99 @@ namespace Overloading
                 }
 
 
-                //find Second
-                else if (x.Contains('^'))
+                //find Second (x*x)
+                else if (x.Contains('^') && x.Length <=2)
                 {
                     x.Trim();
-                    string[] y = x.Split('^');
-                    string first = y[0];
-                    string second = y[1];
+                    string digit = new String(x.Where(Char.IsDigit).ToArray());
                     try
                     {
-
-
-                        int answer = dIntSec.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
-                        Console.WriteLine(answer);
+                        delIntS delIntS = (a) => a * a;
+                        Console.WriteLine(delIntS.Invoke(Convert.ToInt32(digit)));
                     }
                     catch (Exception)
                     {
-                        try
-                        {
-                            float answer = dFloatSec(Convert.ToSingle(first), Convert.ToSingle(second));
-                            Console.WriteLine(answer);
-                        }
-                        catch (Exception)
-                        {
-                            int answer = dStringSec.Invoke(first, second);
-                            Console.WriteLine(answer);
-                        }
+                        string error = ERROR.ErrorHandling;
+                        Console.WriteLine(error);
+
                     }
                 }
 
+                //Lambda Expressions Added:
 
+                //find ^ (x^)
+                else if (x.Contains('^') && x.Length >2)
+                {
+                    x.Trim();
+                    string[] splitted = x.Split('^');
+                    try
+                    {
+                        delInt del = (a,b) => Convert.ToInt32(Math.Pow(a, b));
+                        Console.WriteLine(del.Invoke(Convert.ToInt32(splitted[0]), Convert.ToInt32(splitted[1])));
+                    }
+                    catch (Exception)
+                    {
+                        string error = ERROR.ErrorHandling;
+                        Console.WriteLine(error);
 
+                    }
+                }
 
+                //Sqare
+                else if (x.Contains('_') && x.Length < 3)
+                {
+                    x.Trim();
+                    string digit = new String(x.Where(Char.IsDigit).ToArray());
+                    try
+                    {
+                        delDouble del = (a) => (Math.Sqrt(a));
+                        Console.WriteLine(del.Invoke(Convert.ToDouble(digit)));
+                    }
+                    catch (Exception)
+                    {
+                        string error = ERROR.ErrorHandling;
+                        Console.WriteLine(error);
 
+                    }
+                }
 
+                //Commandlist
+                else if (x.Contains('h'))
+                {
+                    string[] commandlist = {"+ - Add 2 numbers","- - Subtract 2 numbers","/ - Divide 2 numbers","* - Multiply 2 numbers","^ - Lift a number in 2, or x","c - Clear screen", "h - Show this list" };
+                    for (int i = 0; i < commandlist.Length-1; i++)
+                    {
+                        Console.WriteLine(commandlist[i]);
+                    }
+                }
 
+                //clear screen
+                else if (x.Contains('c'))
+                {
+                    Console.Clear();
+                    Console.WriteLine("A little program...");
+                    Console.WriteLine("");
 
+                    Console.WriteLine("Type your calculation, and then press Enter for result");
+                    Console.WriteLine("c clears the screen:");
+                    Console.WriteLine("h For a list of commands:");
+                    Console.WriteLine("");
+                }
 
+                else
+                {
+                    string error = ERROR.ErrorHandling;
+                    Console.WriteLine(error);
+                }
             }
+
+
         }
+
     }
     
 
-    class Math
+    class MathFunc
     {        
         //A)
         public static void DelegateVoid()
@@ -360,6 +417,27 @@ namespace Overloading
             string onlynumbersA = new String(a.Where(Char.IsDigit).ToArray());
 
             return (Convert.ToInt32(onlynumbersA) * Convert.ToInt32(onlynumbersA));
+        }
+    }
+
+    class Error
+    {
+
+        public string ErrorHandling
+        {
+            get
+            {
+                string[] a = { "An Error have occurred!", "This program do not like math mistakes!",
+            "Please stop doing that!", "You just found an easter egg! -Just kidding...",
+            "The same mistake again?", "You should have learned from last time...",
+            "Just stop doing math....", "You dissapoint everyone!",
+            "Are you still here?", "Its not the program, its you!"
+            };
+
+                Random random = new Random();
+                return a[random.Next(0, a.Length - 1)];
+
+            }
         }
     }
 }
