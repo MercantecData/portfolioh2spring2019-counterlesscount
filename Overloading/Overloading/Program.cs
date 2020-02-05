@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Overloading
 {
@@ -19,8 +21,8 @@ namespace Overloading
         public delegate float delFloatS(float a);
         public delegate int delStringS(string a);
         public delegate double delDouble(double a);
-
-
+        public delegate double advancedmath(object a);
+        
 
         static void Main(string[] args)
         {
@@ -72,213 +74,238 @@ namespace Overloading
             Console.WriteLine("");
             bool on = true;
             while (on)
-            {
-                string x = Console.ReadLine();
-
-                //add
-                if (x.Contains('+'))
+            { 
+                try
                 {
-                    x.Trim();
-                    string[] y = x.Split('+');
-                    string first = y[0];
-                    string second = y[1];
-                    try
+                    string x = Console.ReadLine();
+
+                    //Just for the practice
+                    if ((x.Contains('+') || x.Contains('-') || x.Contains('/') || x.Contains('*') || x.Contains('^') || x.Contains('_')) && (x.Contains('+') || x.Contains('-') || x.Contains('/') || x.Contains('*') || x.Contains('^') || x.Contains('_')))
                     {
+                        advancedmath advancedmath = (y) => Convert.ToDouble(y);
+                        if (x.Contains('|'))
+                        {
+                            string results = "";
+                            string[] moremath = x.Trim().Split('|');
+                            foreach (var item in moremath)
+                            {
+                                string calculation = Regex.Replace(item, @"[^0-9.+*^/_-]+", "");
+                                if (calculation.StartsWith('+') || calculation.StartsWith('-') || calculation.StartsWith('/') || calculation.StartsWith('*') || calculation.StartsWith('^') || calculation.StartsWith('_'))
+                                {
+                                    string subcalculation = Regex.Replace(calculation, @"[^0-9.]+", "");
+                                    string subresult = Convert.ToString(advancedmath.Invoke(new DataTable().Compute(subcalculation, null)));
+                                    string property = Regex.Replace(calculation, @"[^+*^/_-]+", "");
+                                    property += subresult;
+                                    results += property;
+                                }
+                                else
+                                {
+                                string result = Convert.ToString(advancedmath.Invoke(new DataTable().Compute(calculation, null)));
+                                results += result;
+                                }
+                            }
+                            Console.WriteLine(results);
+                            Console.WriteLine(advancedmath.Invoke(new DataTable().Compute(results, null)));
+                        }
+                        else
+                        {
+                        string numberandsymbols = Regex.Replace(x, @"[^0-9.+*^/_-]+", "");
+                        Console.WriteLine(advancedmath.Invoke(new DataTable().Compute(numberandsymbols, null)));
+                        }
 
-
-                        int answer = dIntAdd.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
-                        Console.WriteLine(answer);
                     }
-                    catch (Exception)
+
+
+                    //add
+                    else if (x.Contains('+'))
                     {
+                        
+                        string[] y = x.Split('+');
+                        string first = y[0];
+                        string second = y[1];
                         try
                         {
-                            float answer = dFloatAdd(Convert.ToSingle(first), Convert.ToSingle(second));
+
+
+                            int answer = dIntAdd.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
                             Console.WriteLine(answer);
                         }
                         catch (Exception)
                         {
-                            int answer = dStringAdd.Invoke(first, second);
-                            Console.WriteLine(answer);
+                            try
+                            {
+                                float answer = dFloatAdd(Convert.ToSingle(first), Convert.ToSingle(second));
+                                Console.WriteLine(answer);
+                            }
+                            catch (Exception)
+                            {
+                                int answer = dStringAdd.Invoke(first, second);
+                                Console.WriteLine(answer);
+                            }
                         }
                     }
-                }
 
-                //subtract
-                else if (x.Contains('-'))
-                {
-                    x.Trim();
-                    string[] y = x.Split('-');
-                    string first = y[0];
-                    string second = y[1];
-                    try
+                    //subtract
+                    else if (x.Contains('-'))
                     {
-
-
-                        int answer = dIntSub.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
-                        Console.WriteLine(answer);
-                    }
-                    catch (Exception)
-                    {
+                        
+                        string[] y = x.Split('-');
+                        string first = y[0];
+                        string second = y[1];
                         try
                         {
-                            float answer = dFloatSub(Convert.ToSingle(first), Convert.ToSingle(second));
+
+
+                            int answer = dIntSub.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
                             Console.WriteLine(answer);
                         }
                         catch (Exception)
                         {
-                            int answer = dStringSub.Invoke(first, second);
-                            Console.WriteLine(answer);
+                            try
+                            {
+                                float answer = dFloatSub(Convert.ToSingle(first), Convert.ToSingle(second));
+                                Console.WriteLine(answer);
+                            }
+                            catch (Exception)
+                            {
+                                int answer = dStringSub.Invoke(first, second);
+                                Console.WriteLine(answer);
+                            }
                         }
                     }
-                }
 
-                //divide
-                else if (x.Contains('/'))
-                {
-                    x.Trim();
-                    string[] y = x.Split('/');
-                    string first = y[0];
-                    string second = y[1];
-                    try
+                    //divide
+                    else if (x.Contains('/'))
                     {
-
-
-                        int answer = dIntDiv.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
-                        Console.WriteLine(answer);
-                    }
-                    catch (Exception)
-                    {
+                        
+                        string[] y = x.Split('/');
+                        string first = y[0];
+                        string second = y[1];
                         try
                         {
-                            float answer = dFloatDiv(Convert.ToSingle(first), Convert.ToSingle(second));
+
+
+                            int answer = dIntDiv.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
                             Console.WriteLine(answer);
                         }
                         catch (Exception)
                         {
-                            int answer = dStringDiv.Invoke(first, second);
-                            Console.WriteLine(answer);
+                            try
+                            {
+                                float answer = dFloatDiv(Convert.ToSingle(first), Convert.ToSingle(second));
+                                Console.WriteLine(answer);
+                            }
+                            catch (Exception)
+                            {
+                                int answer = dStringDiv.Invoke(first, second);
+                                Console.WriteLine(answer);
+                            }
                         }
                     }
-                }
 
-                //multiply
-                else if (x.Contains('*'))
-                {
-                    x.Trim();
-                    string[] y = x.Split('*');
-                    string first = y[0];
-                    string second = y[1];
-                    try
+                    //multiply
+                    else if (x.Contains('*'))
                     {
-
-
-                        int answer = dIntMulti.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
-                        Console.WriteLine(answer);
-                    }
-                    catch (Exception)
-                    {
+                        
+                        string[] y = x.Split('*');
+                        string first = y[0];
+                        string second = y[1];
                         try
+                        {
+
+
+                            int answer = dIntMulti.Invoke(Convert.ToInt32(first), Convert.ToInt32(second));
+                            Console.WriteLine(answer);
+                        }
+                        catch (Exception)
                         {
                             float answer = dFloatMulti(Convert.ToSingle(first), Convert.ToSingle(second));
                             Console.WriteLine(answer);
                         }
-                        catch (Exception)
-                        {
-                            int answer = dStringMulti.Invoke(first, second);
-                            Console.WriteLine(answer);
-                        }
                     }
-                }
 
 
-                //find Second (x*x)
-                else if (x.Contains('^') && x.Length <=2)
-                {
-                    x.Trim();
-                    string digit = new String(x.Where(Char.IsDigit).ToArray());
-                    try
+                    //find Second (x*x)
+                    else if (x.Contains('^') && x.Length <= 2)
                     {
+                        
+                        string digit = new String(x.Where(Char.IsDigit).ToArray());
+                                             
                         delIntS delIntS = (a) => a * a;
                         Console.WriteLine(delIntS.Invoke(Convert.ToInt32(digit)));
+                        
                     }
-                    catch (Exception)
+
+                    //Lambda Expressions Added:
+
+                    //find ^ (x^)
+                    else if (x.Contains('^') && x.Length > 2)
                     {
-                        string error = ERROR.ErrorHandling;
-                        Console.WriteLine(error);
-
-                    }
-                }
-
-                //Lambda Expressions Added:
-
-                //find ^ (x^)
-                else if (x.Contains('^') && x.Length >2)
-                {
-                    x.Trim();
-                    string[] splitted = x.Split('^');
-                    try
-                    {
-                        delInt del = (a,b) => Convert.ToInt32(Math.Pow(a, b));
+                        
+                        string[] splitted = x.Split('^');
+                        
+                        delInt del = (a, b) => Convert.ToInt32(Math.Pow(a, b));
                         Console.WriteLine(del.Invoke(Convert.ToInt32(splitted[0]), Convert.ToInt32(splitted[1])));
+                        
                     }
-                    catch (Exception)
+
+                    //Sqare
+                    else if (x.Contains('_') && x.Length < 3)
+                    {
+                        
+                        string digit = new String(x.Where(Char.IsDigit).ToArray());
+                        try
+                        {
+                            delDouble del = (a) => (Math.Sqrt(a));
+                            Console.WriteLine(del.Invoke(Convert.ToDouble(digit)));
+                        }
+                        catch (Exception)
+                        {
+                            string error = ERROR.ErrorHandling;
+                            Console.WriteLine(error);
+
+                        }
+                    }
+
+                    //Commandlist
+                    else if (x.Contains('h') && x.Length == 1)
+                    {
+                        string[] commandlist = { "+ - Add 2 numbers", "- - Subtract 2 numbers", "/ - Divide 2 numbers", "* - Multiply 2 numbers", "^ - Lift a number in 2, or x", "| - parenthesis", "c - Clear screen", "h - Show this list" };
+                        for (int i = 0; i < commandlist.Length - 1; i++)
+                        {
+                            Console.WriteLine(commandlist[i]);
+                        }
+                    }
+
+                    //clear screen
+                    else if (x.Contains('c') && x.Length == 1)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("A little program...");
+                        Console.WriteLine("");
+
+                        Console.WriteLine("Type your calculation, and then press Enter for result");
+                        Console.WriteLine("c clears the screen:");
+                        Console.WriteLine("h For a list of commands:");
+                        Console.WriteLine("");
+                    }
+
+                    else
                     {
                         string error = ERROR.ErrorHandling;
                         Console.WriteLine(error);
-
+                        Console.WriteLine("");
                     }
                 }
-
-                //Sqare
-                else if (x.Contains('_') && x.Length < 3)
-                {
-                    x.Trim();
-                    string digit = new String(x.Where(Char.IsDigit).ToArray());
-                    try
-                    {
-                        delDouble del = (a) => (Math.Sqrt(a));
-                        Console.WriteLine(del.Invoke(Convert.ToDouble(digit)));
-                    }
-                    catch (Exception)
-                    {
-                        string error = ERROR.ErrorHandling;
-                        Console.WriteLine(error);
-
-                    }
-                }
-
-                //Commandlist
-                else if (x.Contains('h'))
-                {
-                    string[] commandlist = {"+ - Add 2 numbers","- - Subtract 2 numbers","/ - Divide 2 numbers","* - Multiply 2 numbers","^ - Lift a number in 2, or x","c - Clear screen", "h - Show this list" };
-                    for (int i = 0; i < commandlist.Length-1; i++)
-                    {
-                        Console.WriteLine(commandlist[i]);
-                    }
-                }
-
-                //clear screen
-                else if (x.Contains('c'))
-                {
-                    Console.Clear();
-                    Console.WriteLine("A little program...");
-                    Console.WriteLine("");
-
-                    Console.WriteLine("Type your calculation, and then press Enter for result");
-                    Console.WriteLine("c clears the screen:");
-                    Console.WriteLine("h For a list of commands:");
-                    Console.WriteLine("");
-                }
-
-                else
+                catch (Exception)
                 {
                     string error = ERROR.ErrorHandling;
                     Console.WriteLine(error);
+                    Console.WriteLine("");
+
                 }
+
             }
-
-
         }
 
     }
