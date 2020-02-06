@@ -276,7 +276,7 @@ namespace Overloading
                             Console.WriteLine(commandlist[i]);
                         }
                     }
-
+                        
                     //clear screen
                     else if (x.Contains('c') && x.Length == 1)
                     {

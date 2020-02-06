@@ -6,3 +6,4 @@ Directories
 Overloading
 Delegation
 Lambda Expressions
+Øvelse i nedarvning
