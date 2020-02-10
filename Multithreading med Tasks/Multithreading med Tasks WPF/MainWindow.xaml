@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Multithreading_med_Tasks_WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Background="#FF214DE2" Height="440">
+    <Grid x:Name="MainScreen" Background="#FF214DE2" Height="440">
         <Button x:Name="Btn" Content="Check" HorizontalAlignment="Left" Margin="10,313,0,0" VerticalAlignment="Top" Width="390" Height="88" Click="button_Click_end" FontSize="48" Background="#FF17E012" Foreground="#FFFF0C0C"/>
         <TextBox x:Name="Input" HorizontalAlignment="Left" Margin="10,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="390" Height="108" FontSize="72" TextChanged="Input_TextChanged"/>
         <Button x:Name="button" Content="START" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="144" Width="390" FontSize="72" Foreground="#FF0CF41F" Background="#FF14131A" Click="button_Click_start"/>

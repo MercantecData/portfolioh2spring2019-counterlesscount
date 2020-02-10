@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Multithreading_med_Tasks_WPF
 {
@@ -21,6 +22,7 @@ namespace Multithreading_med_Tasks_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        DispatcherTimer timer = new DispatcherTimer();
         CancellationTokenSource cts;
         public int number = 0;
         public int answer = 0;
@@ -29,7 +31,7 @@ namespace Multithreading_med_Tasks_WPF
         {
             InitializeComponent();
         }
-        private void button_Click_end(object sender, RoutedEventArgs e)
+        public void button_Click_end(object sender, RoutedEventArgs e)
         {
             //Token to stop
             if (cts != null && number == answer)
@@ -39,6 +41,10 @@ namespace Multithreading_med_Tasks_WPF
                 cts = null;
                 TimerText.AppendText(Environment.NewLine);
                 TimerText.AppendText("YOU WIN!");
+                timer.Interval = TimeSpan.FromMilliseconds(200);
+                timer.Tick += new EventHandler(OnTick);
+                timer.Start();
+
             }
             else
             {
@@ -62,6 +68,7 @@ namespace Multithreading_med_Tasks_WPF
 
         private async void button_Click_start(object sender, RoutedEventArgs e)
         {
+            timer.Stop();
             textBox_Input();
             //Token to start
             if (cts == null)
@@ -110,7 +117,18 @@ namespace Multithreading_med_Tasks_WPF
             int x = random.Next(1, 10);
             return x;
         }
-
-
+        private bool BlinkOn;
+        private void OnTick(object source, EventArgs e)
+        {
+            if (BlinkOn)
+            {
+                MainScreen.Background = Brushes.Green;
+            }
+            else
+            {
+                MainScreen.Background = Brushes.Blue;
+            }
+            BlinkOn = !BlinkOn;
+        }
     }
 }
