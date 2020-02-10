@@ -7,6 +7,8 @@ namespace Library
     {
         List<User> User = new List<User>();
         List<Admin> Admin = new List<Admin>();
+        
+            
         public void AddNewUser(User user)
         {   
             this.User.Add(user);     
@@ -45,11 +47,7 @@ namespace Library
     {
         string login;
         string password;
-
-        public User()
-        {
-        }
-
+        
         public User(string login, string password)
         {
             this.login = login;

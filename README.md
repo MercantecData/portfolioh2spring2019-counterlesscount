@@ -8,3 +8,4 @@ Delegation
 Lambda Expressions
 Øvelse i nedarvning
 Library (.dll)
+Opsummering Uge 1
