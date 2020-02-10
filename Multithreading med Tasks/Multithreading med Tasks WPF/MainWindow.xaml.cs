@@ -21,6 +21,7 @@ namespace Multithreading_med_Tasks_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        CancellationTokenSource cts;
         public int number = 0;
         public int answer = 0;
 
@@ -30,55 +31,74 @@ namespace Multithreading_med_Tasks_WPF
         }
         private void button_Click_end(object sender, RoutedEventArgs e)
         {
-            answer = Convert.ToInt32(Input.GetLineText(0));
-            
+            //Token to stop
+            if (cts != null && number == answer)
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+                TimerText.AppendText(Environment.NewLine);
+                TimerText.AppendText("YOU WIN!");
+            }
+            else
+            {
+                TimerText.AppendText(Environment.NewLine);
+                TimerText.AppendText("Try Again!");
+            }
         }
 
         private void Input_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            try
+            {
+                answer = Convert.ToInt32(Input.Text.ToString());
+            }
+            catch (Exception)
+            {
+                TimerText.AppendText(Environment.NewLine);
+                TimerText.AppendText("Wrong Input!");
+            }
         }
 
-        private void button_Click_start(object sender, RoutedEventArgs e)
+        private async void button_Click_start(object sender, RoutedEventArgs e)
         {
-            TimerText.Clear();
-            Task task = textBox_Input();
+            textBox_Input();
+            //Token to start
+            if (cts == null)
+            {
+                cts = new CancellationTokenSource();
+                try
+                {
+                    await GameCounter(TimerText, cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+            }
         }
-        public async Task textBox_Input()
+        public void textBox_Input()
         {
 
             number = NumberGenerator();
             TimerText.Clear();
-            
-            await GameCounter(TimerText);
-            if (answer != 0)
-            {
-                GameCounter(TimerText).Dispose();
-                if (answer == number)
-                {
-                    TimerText.Clear();
-                    TimerText.AppendText("YOU WIN!");
 
-                }
-
-            }
         }
 
-        async Task GameCounter(TextBox j)
+        async Task GameCounter(TextBox j, CancellationToken token)
         {
-            for (int i = 0; i < 11; i++)
+            int i = 0;
+            while (i != 11)
             {
-                if (i == 10)
+                token.ThrowIfCancellationRequested();
+                string a = "You have " + Convert.ToString(10 - i) + " seconds left: " + Convert.ToString(number);
+                j.AppendText(a);
+                await Task.Delay(1000, token);
+                j.AppendText(Environment.NewLine);
+                i++;
+                if(i == 11)
                 {
                     j.AppendText("Looser!");
-                }
-                else
-                {
-                string a = "You have " + Convert.ToString(10 - i) + " seconds left";
-                j.AppendText(a);
-                await Task.Delay(1000);
-                j.AppendText(Environment.NewLine);
-
+                    await Task.Delay(2000, token);
                 }
             }
         }
